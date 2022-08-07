@@ -1,0 +1,296 @@
+*, *::before, *::after {
+	box-sizing: border-box;
+	transition: all 0.3s ease-in-out;
+	-webkit-font-smoothing: antialiased;
+}
+main, h1, h2, section, div {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+body {
+	min-height: 100vh;
+  margin: 5vw;
+	background-image: linear-gradient(
+  27deg,
+  hsl(240deg 100% 50%) 0%,
+  hsl(230deg 88% 60%) 15%,
+  hsl(220deg 76% 70%) 28%,
+  hsl(210deg 65% 80%) 38%,
+  hsl(200deg 53% 90%) 46%,
+  hsl(208deg 64% 84%) 52%,
+  hsl(217deg 77% 78%) 59%,
+  hsl(225deg 88% 71%) 72%,
+  hsl(234deg 100% 65%) 100%
+);
+}
+button {
+	padding: 0;
+	border: none;
+}
+input {
+	width: 50vw;
+	max-width: 300px;
+}
+button, input, .ship {
+	outline: 4px solid transparent;
+	border: 0.1vw black solid;
+	opacity: 0.8;
+}
+button:hover, input:hover, .ship:hover {
+	opacity: 1;
+	border-color: lime;
+	cursor: pointer;
+	font-weight: bold;
+}
+button:focus, input:focus {
+	opacity: 1;
+	border-color: lime;
+	filter: hue-rotate(45deg);
+	outline: 4px solid lime;
+	z-index:5;
+	font-weight: bolder;
+}
+.cell {
+  width: 5vw;
+	padding-top: 100%;
+	/* height: 5vw; */
+	background-color: lightblue;
+	background-image: url("water.gif");
+	background-size: cover;
+}
+.cell-label {
+	width: 100%;
+	height: 100%;
+	opacity: 1;
+	font-size: 3vw;
+	background-color: transparent;
+	border: none;
+}
+.cell-label:hover {
+	border: none;
+	cursor: inherit;
+}
+.cell-label:focus {
+	outline: none;
+}
+
+
+.battle-grid {
+	display: grid;
+	grid-template-columns: repeat(11, 1fr);
+	position: relative;
+}
+.cell:hover {
+	cursor: crosshair;
+}
+.cell.shot:hover {
+	opacity: 1;
+	border-color: red;
+	cursor: not-allowed;
+}
+.self1, .self2 {
+	border: 0.1vw black solid;
+}
+.self1:hover, .self2:hover {
+	cursor:default;
+	outline-color: transparent;
+	border-color:black;
+}
+.uninteractable:hover {
+	cursor:default;
+	outline-color: transparent;
+	border-color:black;
+}
+.uninteractable:focus {
+	outline-color: transparent;
+	border-color:black;
+	filter: hue-rotate(0deg);
+}
+.targeted::after, .missed::after, .hit::after, .sunk::after {
+	content: "X";
+	color: magenta;
+	font-size: 5vw;
+	position: absolute;
+	transform: translate(-50%, -90%);
+}
+
+.missed::after {
+	color: white;
+}
+.hit::after {
+	color: red;
+}
+.sunk::after {
+	content: "S";
+	color: red;
+}
+.self1::after, .self2::after {
+	transform: translate(0%, -42%);
+}
+
+/* .cell:focus{
+	filter: hue-rotate(25deg);
+} */
+/* .occupied {
+	background-color: grey;
+	cursor: default;
+	outline: none;
+}
+.occupied:hover {
+	background-color: grey;
+	cursor: default;
+	outline: none;
+	border-color: transparent;
+}
+.occupied:focus {
+	background-color: grey;
+	cursor: default;
+	outline: none;
+	border-color: transparent;
+} */
+
+.name-input {
+	margin: 5vh 2vw;
+	background-color: lightgoldenrodyellow;
+	padding: 0.5em 1em;
+}
+.name-input:hover {
+	border-radius: 1em;
+}
+.game-button {
+	border: 2px solid black;
+	opacity: 0.8;
+	padding: 1em 2em;
+	margin: 5vh;
+	background-color: lightgoldenrodyellow;
+}
+.game-button:hover {
+	border: 2px solid lime;
+	opacity: 1;
+	border-radius: 1em;
+}
+.game-button:active {
+	transform: scale(0.9);
+}
+.fire-button {
+	grid-area: 12 / 12 / 12 / 1;
+	margin-left: 12vw;
+}
+
+
+
+
+
+
+.ship {
+	opacity: 0.8;
+	position: absolute;
+	height: 5vw;
+	border-radius: 3vw;
+	z-index: 20;
+	font-size:calc(2px + 2vw);
+	background-color: lightgray;
+	transform-origin: top left;
+}
+.ship:hover{
+	opacity: 1;
+	cursor: pointer;
+	background-color: silver;
+}
+.ship:active {
+	opacity: 1;
+	cursor: grabbing;
+	border-color: lime;
+	border-width: 0.2vh;
+	background-color: grey;
+}
+
+.rotate-button {
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size:calc(2px + 2vw);
+}
+.rotated {
+	transform: rotate(90deg);
+}
+
+@media screen and (max-width: 800px) {
+	.ship, .rotate-button {
+		font-size:calc(2px + 1.5vw);
+	}
+}
+@media screen and (max-width: 500px) {
+	.ship, .rotate-button {
+		font-size:calc(2px + 1vw);
+	}
+	.fire-button {
+		padding: 0.5em;
+		margin: 2vw;
+		margin-left: 5vw;
+	}
+}
+/* .blocked {
+	background-image: linear-gradient(
+  45deg,
+  hsl(0deg 0% 0%) 0%,
+  hsl(10deg 79% 21%) 20%,
+  hsl(5deg 93% 39%) 29%,
+  hsl(10deg 100% 61%) 36%,
+  hsl(14deg 100% 80%) 43%,
+  hsl(0deg 0% 100%) 50%,
+  hsl(11deg 100% 82%) 57%,
+  hsl(7deg 100% 66%) 64%,
+  hsl(2deg 69% 46%) 71%,
+  hsl(6deg 62% 24%) 80%,
+  hsl(0deg 0% 0%) 100%
+);
+} */
+.blocked {
+	animation: danger 1s infinite;
+}
+.open {
+	background-color: greenyellow;
+}
+
+.absolute-center {
+	position: absolute;
+	top: 50%;
+  left: 50%;
+  transform: translate(-100%, -100%);
+}
+.absolute-center.game-button:active {
+	transform: translate(-100%, -100%) scale(0.9);
+}
+
+.error {
+	border-color: red;
+	outline-color: red;
+}
+.error:hover {
+	border-color: red;
+	outline-color: red;
+}
+.error:focus {
+	border-color: red;
+	outline-color: red;
+}
+.error:active {
+	border-color: red;
+	outline-color: red;
+}
+
+.hidden {
+	display: none;
+}
+
+
+
+@keyframes danger {
+  0% {background: repeating-linear-gradient(-45deg, hsla(66deg, 50%, 50%, 1) 2vw, hsla(0deg, 50%, 50%, 1) 4vw, hsla(66deg, 50%, 50%, 1) 2vw);}
+  50% {background: repeating-linear-gradient(-45deg, hsla(66deg, 50%, 50%, .5) 2vw, hsla(0deg, 50%, 50%, .5) 4vw, hsla(66deg, 50%, 50%, .5) 2vw);}
+	100% {background: repeating-linear-gradient(-45deg, hsla(66deg, 50%, 50%, 1) 2vw, hsla(0deg, 50%, 50%, 1) 4vw, hsla(66deg, 50%, 50%, 1) 2vw);}
+}
