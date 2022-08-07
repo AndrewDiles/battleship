@@ -10,6 +10,9 @@ main, h1, h2, section, div {
 	align-items: center;
 	flex-direction: column;
 }
+h2 {
+	white-space: nowrap;
+}
 body {
 	min-height: 100vh;
   margin: 5vw;
@@ -124,7 +127,8 @@ button:focus, input:focus {
 	color: red;
 }
 .sunk::after {
-	content: "S";
+	content: "X";
+	/* originally this was an S, because I did not know that you needed to declare which ship name was hit or sunk */
 	color: red;
 }
 .self1::after, .self2::after {
@@ -163,14 +167,15 @@ button:focus, input:focus {
 .game-button {
 	border: 2px solid black;
 	opacity: 0.8;
-	padding: 1em 2em;
+	padding: 1em;
 	margin: 5vh;
 	background-color: lightgoldenrodyellow;
+	font-size: 14px;
 }
 .game-button:hover {
 	border: 2px solid lime;
 	opacity: 1;
-	border-radius: 1em;
+	border-radius: 4px;
 }
 .game-button:active {
 	transform: scale(0.9);
@@ -185,7 +190,7 @@ button:focus, input:focus {
 
 
 
-.ship {
+.ship, .unselectable-ship {
 	opacity: 0.8;
 	position: absolute;
 	height: 5vw;
@@ -194,6 +199,9 @@ button:focus, input:focus {
 	font-size:calc(2px + 2vw);
 	background-color: lightgray;
 	transform-origin: top left;
+}
+.unselectable-ship{
+	opacity: 0.4;
 }
 .ship:hover{
 	opacity: 1;
@@ -223,7 +231,7 @@ button:focus, input:focus {
 		font-size:calc(2px + 1.5vw);
 	}
 }
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 	.ship, .rotate-button {
 		font-size:calc(2px + 1vw);
 	}
@@ -231,6 +239,14 @@ button:focus, input:focus {
 		padding: 0.5em;
 		margin: 2vw;
 		margin-left: 5vw;
+	}
+	h2 {
+		width : 111%;
+		position: relative;
+		left: -5vw;
+	}
+	button:focus {
+		font-weight: normal;
 	}
 }
 /* .blocked {

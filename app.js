@@ -290,7 +290,8 @@ const moveToPlayer2Deploy = (e) => {
   PLAYER_1_VIEW_ELEMENT.innerHTML = "";
   OVERLAY_ELEMENT.classList.remove("hidden");
   const readyButton = createReadyButton(
-    `Player 2: ${gameState.player2Name}'s turn to deploy ships`
+    // `Player 2: ${gameState.player2Name}'s turn to deploy ships`
+		`${gameState.player2Name}'s turn to deploy ships`
   );
   readyButton.addEventListener("click", () => beginPlayerDeployment(2));
 };
@@ -313,7 +314,7 @@ const executeRound = () => {
   // PLAYER_1_VIEW_ELEMENT.innerHTML = "";
   OVERLAY_ELEMENT.classList.remove("hidden");
   const readyButton = createReadyButton(
-    `Round ${gameState.turn} - Player ${gameState.activePlayer}: ${
+    `Round ${gameState.turn} - ${
       gameState.activePlayer === 1
         ? gameState.player1Name
         : gameState.player2Name
@@ -321,6 +322,26 @@ const executeRound = () => {
   );
   readyButton.addEventListener("click", shotSelection);
 };
+
+const createUnselectableSunkShip = (shipInfo, bottom, providedTargetBoard) => {
+	const targetBoard = providedTargetBoard ? providedTargetBoard : gameState.activePlayer === 1 ? PLAYER_1_VIEW_ELEMENT : PLAYER_2_VIEW_ELEMENT;
+	const newShip = document.createElement("div");
+	newShip.innerText = shipInfo.name;
+	newShip.classList.add("unselectable-ship");
+	newShip.style.width = `${5 * shipInfo.length}vw`;
+		if (shipInfo.horizontal) {
+			newShip.style.left = `${5 * shipInfo.col}vw`;
+		} else {
+			newShip.style.left = `${5 * (shipInfo.col + 1)}vw`;
+		}
+		if (bottom) {
+			newShip.style.bottom = `${5.2 * (10-shipInfo.row)}vw`;
+		} else {
+			newShip.style.top = `${5.2 * (shipInfo.row)-1.7}vw`;
+		}
+		targetBoard.appendChild(newShip)
+}
+
 const handleAttemptFire = (e) => {
 	const buttonText = e.target.innerText;
   if (gameState.isShooting) {
@@ -375,18 +396,19 @@ const handleAttemptFire = (e) => {
 				if (isSunk) {
 					console.log("sunk")
 					locationElement.classList.add("sunk");
+					createUnselectableSunkShip(hitShipInfo)
 					let gameOver = gameState.shipInfo[enemyPlayerNumber].every((ship)=>ship.sunk)
 					if (gameOver) {
 						console.log("game over")
-						INSTRUCTIONS_ELEMENT.innerText = `GAME OVER - Player ${gameState.activePlayer}: ${gameState.activePlayer === 1 ? gameState.player1Name : player1Name.player2Name } WINS!`;
+						INSTRUCTIONS_ELEMENT.innerText = `GAME OVER - ${gameState.activePlayer === 1 ? gameState.player1Name : player1Name.player2Name } WINS!`;
 						e.target.innerText = START_NEW_GAME_MESSAGE;
 						gameState.gameOver = true;
 					} else {
-						e.target.innerText = SUNK_INDICATION;
+						e.target.innerText = hitShipInfo.name + SUNK_INDICATION;
 					}
 				} else {
 					locationElement.classList.add("hit");
-					e.target.innerText = HIT_INDICATION;
+					e.target.innerText = hitShipInfo.name + HIT_INDICATION;
 				}
       } else {
         console.log("miss");
@@ -449,7 +471,9 @@ const addButtonListeners = (playerNumber) => {
 };
 
 const populateSelfBoardWithShips = (targetBoard, playerNumber) => {
-
+	gameState.shipInfo[playerNumber].forEach((shipInfo) => {
+		createUnselectableSunkShip(shipInfo, "bottom", targetBoard)
+	});
 }
 
 const endDeploymentStage = (e) => {
@@ -576,7 +600,8 @@ const handleClickStart = () => {
 	localStorage.setItem("bs-player1", name1);
 	localStorage.setItem("bs-player2", name2);
   createReadyButton(
-    `Player 1: ${name1}'s turn to deploy ships`
+    // `Player 1: ${name1}'s turn to deploy ships`
+		`${name1}'s turn to deploy ships`
   ).addEventListener("click", () => beginPlayerDeployment(1));
 };
 const createStartButtonAndNameInputs = () => {
