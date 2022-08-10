@@ -1,10 +1,10 @@
 const INITIAL_HORIZONTAL_AND_SUNK = {horizontal: true, sunk: false}
 const INITIAL_SHIP_INFO = [
-	{name: "Carrier", length: 5, row :1, col:1, ...INITIAL_HORIZONTAL_AND_SUNK},
-	{name: "Battleship", length: 4, row :2, col:1, ...INITIAL_HORIZONTAL_AND_SUNK},
-	{name: "Destroyer", length: 3, row :3, col:1, ...INITIAL_HORIZONTAL_AND_SUNK},
-	{name: "Submarine", length: 3, row :4, col:1, ...INITIAL_HORIZONTAL_AND_SUNK},
-	{name: "Patrol", length: 2, row :5, col:1, ...INITIAL_HORIZONTAL_AND_SUNK},
+	{name: "Carrier", length: 5, row :1, col:1, url: "url(./assets/carrier.png)", ...INITIAL_HORIZONTAL_AND_SUNK},
+	{name: "Battleship", length: 4, row :2, col:1, url: "url(./assets/battleship.png)", ...INITIAL_HORIZONTAL_AND_SUNK},
+	{name: "Destroyer", length: 3, row :3, col:1, url: "url(./assets/destroyer.png)", ...INITIAL_HORIZONTAL_AND_SUNK},
+	{name: "Submarine", length: 3, row :4, col:1, url: "url(./assets/submarine.png)", ...INITIAL_HORIZONTAL_AND_SUNK},
+	{name: "Patrol", length: 2, row :5, col:1, url: "url(./assets/patrol.png)", ...INITIAL_HORIZONTAL_AND_SUNK},
 ];
 
 const INITIAL_GAME_STATE = {

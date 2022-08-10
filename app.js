@@ -244,6 +244,9 @@ const createMoveableShips = (playerNumber) => {
     newShip.classList.add("ship");
     newShip.id = `${shipInfo.name}${playerNumber}`;
     newShip.style.width = `${5 * shipInfo.length}vw`;
+		newShip.style.backgroundImage = shipInfo.url;
+		newShip.style.backgroundSize = `${5*shipInfo.length}vw 5vw`;
+		// if (shipInfo.name === "Submarine") newShip.style.color = "white";
     setShipLocationFromElementAndLocation(shipInfo, newShip, true);
     newShip.draggable = "true";
     const rotateButton = document.createElement("button");
@@ -328,7 +331,10 @@ const createUnselectableSunkShip = (shipInfo, bottom, providedTargetBoard) => {
 	const newShip = document.createElement("div");
 	newShip.innerText = shipInfo.name;
 	newShip.classList.add("unselectable-ship");
+	newShip.style.backgroundImage = shipInfo.url;
+	newShip.style.backgroundSize = `${5*shipInfo.length}vw 5vw`;
 	newShip.style.width = `${5 * shipInfo.length}vw`;
+	// if (shipInfo.name === "Submarine") newShip.style.color = "white";
 		if (shipInfo.horizontal) {
 			newShip.style.left = `${5 * shipInfo.col}vw`;
 		} else {

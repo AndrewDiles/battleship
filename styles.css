@@ -194,26 +194,34 @@ button:focus, input:focus {
 	opacity: 0.8;
 	position: absolute;
 	height: 5vw;
-	border-radius: 3vw;
+	/* border-radius: 3vw; */
 	z-index: 20;
 	font-size:calc(2px + 2vw);
-	background-color: lightgray;
+	/* background-color: lightgray; */
 	transform-origin: top left;
+	background-size: cover;
+	user-select: none;
+	color: white;
 }
 .unselectable-ship{
-	opacity: 0.4;
+	opacity: 0.5;
 }
 .ship:hover{
 	opacity: 1;
 	cursor: pointer;
-	background-color: silver;
+	color: lime;
+	/* background-color: silver; */
 }
 .ship:active {
 	opacity: 1;
 	cursor: grabbing;
 	border-color: lime;
+	color: lime;
 	border-width: 0.2vh;
-	background-color: grey;
+	/* background-color: grey; */
+}
+.sunk {
+	color: red;
 }
 
 .rotate-button {
