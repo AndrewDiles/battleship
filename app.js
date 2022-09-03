@@ -1,4 +1,5 @@
 let gameState = null;
+// let pieceTouched = null;
 
 const getRowLetterFromNumber = (rowNumber) => {
   if (!rowNumber) return null;
@@ -66,8 +67,9 @@ const generateRowAndColFromDragEvent = (e, boardElement) => {
   const CELL_SIZE = SAMPLE_CELL_RECT.width + SAMPLE_CELL_RECT.width / 250;
   const BOARD_START_X = boardElement.getBoundingClientRect().x;
   const BOARD_START_Y = boardElement.getBoundingClientRect().y;
-  const X_POS = e.clientX - BOARD_START_X - CELL_SIZE;
-  const Y_POS = e.pageY - BOARD_START_Y - TOP_ROW_HEIGHT;
+	const TOPSCROLL = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+	const X_POS = e.clientX - BOARD_START_X - CELL_SIZE;
+  const Y_POS = e.pageY - BOARD_START_Y - TOP_ROW_HEIGHT - TOPSCROLL;
   const col = Math.floor(X_POS / CELL_SIZE) + 1;
   const row =
     Math.floor(Y_POS / (CELL_SIZE + SAMPLE_CELL_RECT.width / 31.25)) + 1;
@@ -146,15 +148,8 @@ const applyBlockedAndOpenClasses = (
     // modifyOccupiedOfShipLocations(targetShipInfo, "add");
   }
 };
+const moveShip = (row, col, playerNumber, shipName) => {
 
-const handleDragShip = (e, playerNumber, shipName) => {
-  if (e.x === 0 && e.y === 0) {
-    removeAllBlockedAndOpenClasses();
-    return;
-  }
-  const TARGET_BOARD =
-    playerNumber === 1 ? PLAYER_1_VIEW_ELEMENT : PLAYER_2_VIEW_ELEMENT;
-  const { row, col } = generateRowAndColFromDragEvent(e, TARGET_BOARD);
   if (row > 10 || row < 1 || col > 10 || col < 1) {
     removeAllBlockedAndOpenClasses();
     return;
@@ -170,7 +165,27 @@ const handleDragShip = (e, playerNumber, shipName) => {
   }
   removeAllBlockedAndOpenClasses();
   applyBlockedAndOpenClasses(newCellsToOccupy, playerNumber, shipName);
+}
+const handleDragShip = (e, playerNumber, shipName) => {
+	// console.log("dragging")
+  if (e.x === 0 && e.y === 0) {
+    removeAllBlockedAndOpenClasses();
+    return;
+  }
+	const TARGET_BOARD =
+    playerNumber === 1 ? PLAYER_1_VIEW_ELEMENT : PLAYER_2_VIEW_ELEMENT;
+	const { row, col } = generateRowAndColFromDragEvent(e, TARGET_BOARD);
+	moveShip(row, col, playerNumber, shipName)
 };
+const handleDragShipTouch = (e, playerNumber, shipName) => {
+	const TARGET_BOARD =
+    playerNumber === 1 ? PLAYER_1_VIEW_ELEMENT : PLAYER_2_VIEW_ELEMENT;
+	if (e && e.touches && e.touches[0]) {
+		const touchInfo = e.touches[0];
+		const { row, col } = generateRowAndColFromDragEvent(touchInfo, TARGET_BOARD);
+		moveShip(row, col, playerNumber, shipName)
+	} else {console.log("error obtaining touch info")}
+}
 const handleRotateShip = (rotateButtonElement, playerNumber, shipName) => {
   const shipToRotateInfo = gameState.shipInfo[playerNumber].find(
     (ship) => ship.name === shipName
@@ -238,6 +253,7 @@ const removeClonedElements = () =>
     .forEach((nodeElement) => nodeElement.remove());
 
 const createMoveableShips = (playerNumber) => {
+	// if (TOUCH_DEVICE) pieceTouched = null;
   gameState.shipInfo[playerNumber].forEach((shipInfo) => {
     const newShip = document.createElement("div");
     newShip.innerText = shipInfo.name;
@@ -248,7 +264,7 @@ const createMoveableShips = (playerNumber) => {
 		newShip.style.backgroundSize = `${5*shipInfo.length}vw 5vw`;
 		// if (shipInfo.name === "Submarine") newShip.style.color = "white";
     setShipLocationFromElementAndLocation(shipInfo, newShip, true);
-    newShip.draggable = "true";
+    
     const rotateButton = document.createElement("button");
     rotateButton.classList.add("rotate-button");
     rotateButton.innerText = "⤸";
@@ -260,14 +276,27 @@ const createMoveableShips = (playerNumber) => {
       PLAYER_2_VIEW_ELEMENT.appendChild(newShip);
     }
 
-    newShip.addEventListener("dragstart", hideDraggingElement, false);
-    newShip.addEventListener("drag", (e) => {
-      handleDragShip(e, playerNumber, shipInfo.name);
-    });
-    newShip.addEventListener("dragend", removeClonedElements);
-    rotateButton.addEventListener("click", () =>
-      handleRotateShip(rotateButton, playerNumber, shipInfo.name)
-    );
+		rotateButton.addEventListener("click", () =>
+		handleRotateShip(rotateButton, playerNumber, shipInfo.name)
+	);
+
+		if (TOUCH_DEVICE) {
+
+		// touchstart is equivalent to mousedown
+		// touchend is equivalent to mouseup
+		// touchmove is equivalent to mousemove
+		newShip.addEventListener("touchmove", (e) => {
+			handleDragShipTouch(e, playerNumber, shipInfo.name);
+		});
+
+		} else {
+			newShip.draggable = "true";
+			newShip.addEventListener("dragstart", hideDraggingElement, false);
+			newShip.addEventListener("drag", (e) => {
+				handleDragShip(e, playerNumber, shipInfo.name);
+			});
+			newShip.addEventListener("dragend", removeClonedElements);
+		}
   });
 };
 const setOccupiedCells = (playerNumber) => {
@@ -406,7 +435,7 @@ const handleAttemptFire = (e) => {
 					let gameOver = gameState.shipInfo[enemyPlayerNumber].every((ship)=>ship.sunk)
 					if (gameOver) {
 						console.log("game over")
-						INSTRUCTIONS_ELEMENT.innerText = `GAME OVER - ${gameState.activePlayer === 1 ? gameState.player1Name : player1Name.player2Name } WINS!`;
+						INSTRUCTIONS_ELEMENT.innerText = `GAME OVER - ${gameState.activePlayer === 1 ? gameState.player1Name : gameState.player2Name } WINS!`;
 						e.target.innerText = START_NEW_GAME_MESSAGE;
 						gameState.gameOver = true;
 					} else {

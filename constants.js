@@ -7,6 +7,12 @@ const INITIAL_SHIP_INFO = [
 	{name: "Patrol", length: 2, row :5, col:1, url: "url(./assets/patrol.png)", ...INITIAL_HORIZONTAL_AND_SUNK},
 ];
 
+// BOOL depending on whether or not device used has touch functionality
+// needed for drag events
+const TOUCH_DEVICE =  (('ontouchstart' in window) ||  
+    (navigator.maxTouchPoints > 0) ||  
+    (navigator.msMaxTouchPoints > 0));  
+
 const INITIAL_GAME_STATE = {
 	gameOver: false, // will contain 1 or 2 for who won the player
 	turn: 1,
