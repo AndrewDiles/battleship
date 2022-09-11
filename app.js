@@ -368,6 +368,7 @@ const createUnselectableSunkShip = (shipInfo, bottom, providedTargetBoard) => {
 			newShip.style.left = `${5 * shipInfo.col}vw`;
 		} else {
 			newShip.style.left = `${5 * (shipInfo.col + 1)}vw`;
+			newShip.classList.add("rotated");
 		}
 		if (bottom) {
 			newShip.style.bottom = `${5.2 * (10-shipInfo.row)}vw`;
